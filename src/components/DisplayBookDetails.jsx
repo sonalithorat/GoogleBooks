@@ -16,8 +16,8 @@ class DisplayBookDetails extends Component {
                 {id: 2, name: 'aaa', description: 'des2', author: 'auth2', price: 222, category: "cat2"},
                 {id: 3, name: 'aaa', description: 'des3', author: 'auth3', price: 1222, category: "cat2"} */
             },
-            checkedOut: false,
-            checkedIn: true
+            bookCheckedOut: false,
+            bookCheckedIn: true
 
         }
 
@@ -32,7 +32,28 @@ class DisplayBookDetails extends Component {
         this.handleSuccessResponse = this.handleSuccessResponse.bind(this)
         this.checkIn = this.checkIn.bind(this)
         this.checkOut = this.checkOut.bind(this)
-        this.getBookId()
+        //this.getBookId()
+    }
+
+    componentDidMount() {
+        console.log("inside getBookid")
+        this.setState({ param: this.state.urlSearchParam.get('id') })
+        console.log(this.state.urlSearchParam.get('id'))
+        BooksService.retriveBookById(this.state.urlSearchParam.get('id'))
+            .then(
+                response => {
+                    this.setState({ books: response.data })
+                    this.setState({ bookCheckedOut: response.data.borrowed})
+                    if(response.data.borrowed===false){
+                        this.setState({bookCheckedOut: true})
+                        this.setState({bookCheckedIn: false})
+                    } else{
+                        this.setState({bookCheckedOut: false})
+                        this.setState({bookCheckedIn: true})
+                    }
+                }
+            )
+        console.log("book is:", this.state.books)
     }
     render() {
 
@@ -65,11 +86,11 @@ class DisplayBookDetails extends Component {
                         <div><button style={{ color: "black", fontWeight: "bolder", fontSize: 13, width: "100px", backgroundColor: "green" }} onClick={e => window.location.href = `/books`}>Cancel</button></div>
                     </th>
 
-                    {this.state.checkedOut && <th>
+                    {! this.state.bookCheckedOut && <th>
                         <div><button style={{ color: "black", fontWeight: "bolder", fontSize: 13, width: "100px", backgroundColor: "yellow" }} onClick={()=>this.checkIn(this.state.books)}>Check In</button></div>
                     </th>
                     }
-                    {this.state.checkedIn && <th>
+                    {this.state.bookCheckedOut && <th>
                         <div><button style={{ color: "black", fontWeight: "bolder", fontSize: 13, width: "100px", backgroundColor: "blue" }} onClick={()=>this.checkOut(this.state.books)}>Check Out</button></div>
                     </th>
                     }
@@ -85,15 +106,15 @@ class DisplayBookDetails extends Component {
             
         }else{
             BooksService.updateBook(-1,this.state.books)
-            this.setState({ checkedOut: true })
-            this.setState({ checkedIn: false })
+            this.setState({ bookCheckedOut: false })
+            // this.setState({ checkedIn: false })
         }
         console.log("book stock is:", this.state.books.stock)
     }
     checkIn(bookInfo) {
             BooksService.updateBook(+1,bookInfo)
-            this.setState({ checkedOut: false })
-            this.setState({ checkedIn: true })     
+            this.setState({ bookCheckedOut: true })
+            // this.setState({ checkedIn: true })     
     }
     getBookId() {
         console.log("inside getBookid")

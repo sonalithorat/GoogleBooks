@@ -28,6 +28,7 @@ class SearchResult extends Component {
         this.getData = this.getData.bind(this)
         this.retriveWelcomeMessage = this.retriveWelcomeMessage.bind(this)
         this.retriveBookDetails = this.retriveBookDetails.bind(this);
+        this.retriveAllBook = this.retriveAllBook.bind(this);
     }
     componentDidMount() {
         BooksService.retriveAllBooks()
@@ -63,11 +64,20 @@ class SearchResult extends Component {
 
             }
         )
-
-
-
-
     }
+    retriveAllBook() {
+        console.log();
+        BooksService.retriveAllBooks().then(
+            response => {
+                this.setState({ bookInfo: response.data })
+                console.log(response.data.id)
+                window.location.href = `/books`;
+                // BookDetails.displayDetails(response.data) ?ProductId=" + productId;
+
+            }
+        )
+    }
+
     getData(val) {
         this.setState({ data: val.target.value })
         this.setState({ print: false })
@@ -97,6 +107,14 @@ class SearchResult extends Component {
                             })}
                         >
                             Recently Visited
+                        </NavLink>
+                    </div>
+                    <div>
+                        <NavLink onClick={() => this.retriveAllBook()}
+                            to="/books"
+                            style={{color: "red"}}
+                        >
+                            Clear
                         </NavLink>
                     </div>
                     {/* <Routes>

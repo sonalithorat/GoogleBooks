@@ -27,6 +27,12 @@ class BooksService{
     // }
     updateBook(stock, book) {
         console.log("stock=",book.stock);
+        if(stock== -1){
+            book.borrowed = true
+        }else if(stock == 1){
+            book.borrowed = false
+        }
+       
         book.stock = book.stock+stock;
         console.log("stock=",book.stock);
         //console.log('executed service')
