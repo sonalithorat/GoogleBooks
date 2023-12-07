@@ -25,6 +25,27 @@ input:focus{
 #search-icon{
     color: aqua;
 }
+.shopping-cart{
+    background-color: transparent;
+    width: 100%;
+    border-radius: 10px;
+    height: 2.5rem;
+    padding: 0 0px;
+    box-shadow: 0px 0px 4px #ddd;
+    display: flex;
+    align-items: center;
+}
+#cart{
+    color: olivedrab;
+    align-items: right;
+    /* margin: 190px; */
+    margin-left: 80%;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    height: 30px;
+    padding: 0 0px;
+    width: 80%;
+}
 
 button{
     background-color: green;

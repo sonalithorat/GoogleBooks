@@ -1,14 +1,14 @@
 import { Component } from "react";
-import { searchResults } from "./SearchResults";
 import BooksService from "../service/BooksService";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaShoppingCart } from "react-icons/fa";
 import "./SearchResults.css";
 import { Link } from 'react-router-dom';
 import {
-    
+
     NavLink,
 } from 'react-router-dom';
 import RecentlyVisited from "./RecentyVisited";
+import CartComponent from "./CartComponent";
 
 class SearchResult extends Component {
     constructor(props) {
@@ -26,7 +26,7 @@ class SearchResult extends Component {
             print: false
         }
         this.getData = this.getData.bind(this)
-        this.retriveWelcomeMessage = this.retriveWelcomeMessage.bind(this)
+        this.retriveBook = this.retriveBook.bind(this)
         this.retriveBookDetails = this.retriveBookDetails.bind(this);
         this.retriveAllBook = this.retriveAllBook.bind(this);
     }
@@ -41,7 +41,7 @@ class SearchResult extends Component {
     }
 
 
-    retriveWelcomeMessage() {
+    retriveBook() {
         BooksService.retriveBooksByName(this.state.data)
             .then(
                 response => {
@@ -60,7 +60,6 @@ class SearchResult extends Component {
                 this.setState({ bookInfo: response.data })
                 console.log(response.data.id)
                 window.location.href = `/details?id=${id}`;
-                // BookDetails.displayDetails(response.data) ?ProductId=" + productId;
 
             }
         )
@@ -72,60 +71,57 @@ class SearchResult extends Component {
                 this.setState({ bookInfo: response.data })
                 console.log(response.data.id)
                 window.location.href = `/books`;
-                // BookDetails.displayDetails(response.data) ?ProductId=" + productId;
 
             }
         )
+    }
+
+    getCartItems(){
+        console.log();
+        window.location.href = `/cart`;
     }
 
     getData(val) {
         this.setState({ data: val.target.value })
         this.setState({ print: false })
         this.setState({ welcomeMessage: '' })
-        //setData(val.target.value)
-        //setPrint(false)
-        // BooksService.retriveBooks(val.target.value).then(response => handleSuccessResponse(response))
         console.log(val.target.value)
 
     }
 
     render() {
         return (
-            <>
+            <> 
+            <div className="shopping-cart">
+                    <FaShoppingCart id="cart" color="yello" onClick= {this.getCartItems}></FaShoppingCart>
+                </div>
                 <div className="input-wrapper">
                     <FaSearch id="search-icon" />
                     <input placeholder="Type to search" onChange={this.getData}></input>
-                    <button onClick={this.retriveWelcomeMessage} >Click here</button>
+                    <button onClick={this.retriveBook} >Click here</button>
                 </div>
-                <div className ="search-history" >
-                        <NavLink
-                            to="/recent"
-                            style={({ isActive }) => ({
-                                color: isActive
-                                    ? "greenyellow"
-                                    : "blue",
-                            })}
-                        >
-                            Recently Visited
-                        </NavLink>
-                    </div>
-                    <div>
-                        <NavLink onClick={() => this.retriveAllBook()}
-                            to="/books"
-                            style={{color: "red"}}
-                        >
-                            Clear
-                        </NavLink>
-                    </div>
-                    {/* <Routes>
-                        <Route
-                            exact
-                            path="/recent"
-                            element={<RecentlyVisited />}
-                        />
-                    </Routes> */}
-                    {/* <div className="search-history"><href>Recently Visited</href></div> */}
                 
+                <div className="search-history" >
+                    <NavLink
+                        to="/recent"
+                        style={({ isActive }) => ({
+                            color: isActive
+                                ? "greenyellow"
+                                : "blue",
+                        })}
+                    >
+                        Recently Visited
+                    </NavLink>
+                </div>
+                <div>
+                    <NavLink onClick={() => this.retriveAllBook()}
+                        to="/books"
+                        style={{ color: "red" }}
+                    >
+                        Clear
+                    </NavLink>
+                </div>
+
                 <div className="books-table">
                     <table className="table">
                         <thead>
@@ -134,9 +130,6 @@ class SearchResult extends Component {
                                 <th>name</th>
                                 <th>description</th>
 
-                                {/*  <th>author</th>
-                                <th>price</th>
-                                <th>category</th> */}
                             </tr>
 
                         </thead>
@@ -145,15 +138,9 @@ class SearchResult extends Component {
                                 this.state.books.map(
                                     book =>
                                         <tr>
-                                            {/* <td>{book.id}</td> */}
-
                                             <td onClick={() => this.retriveBookDetails(book.id)}>{book.name}</td>
                                             <td>{book.description}</td>
-                                            {/* <Link to={`/details=${bookInfo}`}>Go to My Page</Link> */}
-                                            {/* <button>Click Here</button> */}
-                                            {/* <td>{book.author}</td>
-                                            <td>{book.price}</td>
-                                            <td>{book.category}</td> */}
+                                
                                         </tr>
                                 )
                             }

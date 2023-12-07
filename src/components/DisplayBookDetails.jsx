@@ -11,13 +11,13 @@ class DisplayBookDetails extends Component {
             urlSearchParam: new URLSearchParams(window.location.search),
             param: 0,
             books: {
-                
+
                 /* {id: 1, name: 'aaa', description: 'des1', author: 'auth1', price: 122, category: "cat1"},
                 {id: 2, name: 'aaa', description: 'des2', author: 'auth2', price: 222, category: "cat2"},
                 {id: 3, name: 'aaa', description: 'des3', author: 'auth3', price: 1222, category: "cat2"} */
             },
             bookCheckedOut: false,
-            bookCheckedIn: true
+            addedToCart: false
 
         }
 
@@ -32,6 +32,8 @@ class DisplayBookDetails extends Component {
         this.handleSuccessResponse = this.handleSuccessResponse.bind(this)
         this.checkIn = this.checkIn.bind(this)
         this.checkOut = this.checkOut.bind(this)
+        this.addToCart = this.addToCart.bind(this);
+        this.remove = this.remove.bind(this);
         //this.getBookId()
     }
 
@@ -43,13 +45,16 @@ class DisplayBookDetails extends Component {
             .then(
                 response => {
                     this.setState({ books: response.data })
-                    this.setState({ bookCheckedOut: response.data.borrowed})
-                    if(response.data.borrowed===false){
-                        this.setState({bookCheckedOut: true})
-                        this.setState({bookCheckedIn: false})
-                    } else{
-                        this.setState({bookCheckedOut: false})
-                        this.setState({bookCheckedIn: true})
+                    this.setState({ bookCheckedOut: response.data.borrowed })
+                    if (response.data.borrowed === false) {
+                        this.setState({ bookCheckedOut: true })
+                    } else {
+                        this.setState({ bookCheckedOut: false })
+                    }
+                    if (response.data.addedToCart === false) {
+                        this.setState({ addedToCart: true })
+                    } else {
+                        this.setState({ addedToCart: false })
                     }
                 }
             )
@@ -58,8 +63,8 @@ class DisplayBookDetails extends Component {
     render() {
 
         return (
-            <> 
-                <div><href>Recently Visited</href></div>
+            <>
+
                 <table>
                     <tr>
                         <th>
@@ -86,12 +91,20 @@ class DisplayBookDetails extends Component {
                         <div><button style={{ color: "black", fontWeight: "bolder", fontSize: 13, width: "100px", backgroundColor: "green" }} onClick={e => window.location.href = `/books`}>Cancel</button></div>
                     </th>
 
-                    {! this.state.bookCheckedOut && <th>
-                        <div><button style={{ color: "black", fontWeight: "bolder", fontSize: 13, width: "100px", backgroundColor: "yellow" }} onClick={()=>this.checkIn(this.state.books)}>Check In</button></div>
+                    {!this.state.bookCheckedOut && <th>
+                        <div><button style={{ color: "black", fontWeight: "bolder", fontSize: 13, width: "100px", backgroundColor: "yellow" }} onClick={() => this.checkIn(this.state.books)}>Check In</button></div>
                     </th>
                     }
                     {this.state.bookCheckedOut && <th>
-                        <div><button style={{ color: "black", fontWeight: "bolder", fontSize: 13, width: "100px", backgroundColor: "blue" }} onClick={()=>this.checkOut(this.state.books)}>Check Out</button></div>
+                        <div><button style={{ color: "black", fontWeight: "bolder", fontSize: 13, width: "100px", backgroundColor: "blue" }} onClick={() => this.checkOut(this.state.books)}>Check Out</button></div>
+                    </th>
+                    }
+                    {this.state.addedToCart && <th>
+                        <div><button style={{ color: "black", fontWeight: "bolder", fontSize: 13, width: "100px", backgroundColor: "green" }} onClick={() => this.addToCart(this.state.books)}>Add to Cart</button></div>
+                    </th>
+                    }
+                    {!this.state.addedToCart && <th>
+                        <div><button style={{ color: "black", fontWeight: "bolder", fontSize: 13, width: "100px", backgroundColor: "green" }} onClick={() => this.remove(this.state.books)}>Remove From Cart</button></div>
                     </th>
                     }
                 </tr>
@@ -103,18 +116,38 @@ class DisplayBookDetails extends Component {
     checkOut(bookInfo) {
         if (this.state.books.stock === 0) {
             alert("Book is out of stock")
-            
-        }else{
-            BooksService.updateBook(-1,this.state.books)
+
+        } else {
+            BooksService.updateBook(-1, this.state.books)
             this.setState({ bookCheckedOut: false })
             // this.setState({ checkedIn: false })
         }
         console.log("book stock is:", this.state.books.stock)
     }
+
+    addToCart(bookInfo) {
+
+        BooksService.updateBook_addToCart(true, this.state.books)
+        .then(
+            response => {
+                this.setState({ addedToCart: false })
+            }
+        )
+
+        console.log("added to cart is:", this.state.books.addToCart)
+    }
+    remove(bookInfo) {
+        BooksService.updateBook_addToCart(false, this.state.books)
+        .then(
+            response => {
+                this.setState({ addedToCart: true })
+            }
+        )
+        console.log("added to cart is:", this.state.books.addToCart)
+    }
     checkIn(bookInfo) {
-            BooksService.updateBook(+1,bookInfo)
-            this.setState({ bookCheckedOut: true })
-            // this.setState({ checkedIn: true })     
+        BooksService.updateBook(+1, bookInfo)
+        this.setState({ bookCheckedOut: true })   
     }
     getBookId() {
         console.log("inside getBookid")

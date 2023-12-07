@@ -1,14 +1,11 @@
 import { Component } from "react";
 import React from "react";
 import "./LoginComponent.css";
-import { useNavigate } from "react-router-dom";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import WelcomeComponent from "./WelcomeComponent";
-import { Navigate } from "react-router-dom";
+import AuthenticationService from "./AuthenticationService.js";
 class LoginComponent extends Component {
     constructor(props) {
         super(props)
-       
+
         this.state = {
             username: 'username',
             password: '',
@@ -18,7 +15,7 @@ class LoginComponent extends Component {
         this.handleChange = this.handleChange.bind(this)
         this.loginClicked = this.loginClicked.bind(this)
     }
-    
+
 
     handleChange(event) {
         //console.log(this.state);
@@ -31,19 +28,10 @@ class LoginComponent extends Component {
     }
 
     loginClicked() {
-        if (this.state.username === 'username' && this.state.password === 'password') {
+        if (this.state.username === 'username' && this.state.password === 'thorat') {
             console.log("login successful");
+            AuthenticationService.registerUser(this.state.username, this.state.password)
             window.location.href = '/books'
-            //Contact();
-           // WelcomePage();
-            //return <Navigate to="/welcome"/>
-            
-            //this.props.navigate("/welcome")
-            // this.setState({
-            //     hasLoginFailed: false,
-            //     showSuccessMessage: true
-
-            // })
         }
         else {
             console.log("failed")
@@ -56,15 +44,16 @@ class LoginComponent extends Component {
     }
 
     render() {
-       
+
         return (
             <div>
+                
                 <h1>Login</h1>
+
                 <div className="container">
-                    {/*<ShowInvalidCredentials hasLoginFailed={this.state.hasLoginFailed}/>*/}
+  
                     {this.state.hasLoginFailed && <div className="alert alert-warning">Invalid Credentials</div>}
                     {this.state.showSuccessMessage && <div>Login Sucessful</div>}
-                    {/*<ShowLoginSuccessMessage showSuccessMessage={this.state.showSuccessMessage}/>*/}
                     User Name: <input type="text" name="username" value={this.state.username} onChange={this.handleChange} />
                     Password: <input type="password" name="password" value={this.state.password} onChange={this.handleChange} />
                     <button className="btn btn-success" onClick={this.loginClicked}>Login</button>

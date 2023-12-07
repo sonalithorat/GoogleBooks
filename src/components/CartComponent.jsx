@@ -1,9 +1,7 @@
-import { Component } from "react"
-import React from "react";
+import { Component } from "react";
 import BooksService from "../service/BooksService";
-import "./SearchResults.css";
-import { NavLink } from 'react-router-dom';
-class RecentlyVisited extends Component {
+
+class CartComponent extends Component {
     constructor(props) {
         super(props);
 
@@ -18,36 +16,20 @@ class RecentlyVisited extends Component {
             data: '',
             print: false
         }
-        this.getData = this.getData.bind(this)
-        this.retriveWelcomeMessage = this.retriveWelcomeMessage.bind(this)
+       
+       
         this.retriveBookDetails = this.retriveBookDetails.bind(this);
+        
     }
     componentDidMount() {
-        BooksService.retriveViewedBooks()
-            .then(
-                response => {
-                    this.setState({ books: response.data })
-                    // if(response.data.length===0){
-                    //     alert("No Records Found")
-                    // }
-                }
-            )
-
-    }
-
-
-    retriveWelcomeMessage() {
-        BooksService.retriveBooksByName(this.state.data)
+        BooksService.retriveCartBooks()
             .then(
                 response => {
                     this.setState({ books: response.data })
                 }
             )
-        this.setState({ print: true })
-
 
     }
-
     retriveBookDetails(id) {
         console.log(id);
         BooksService.retriveBookById(id).then(
@@ -55,45 +37,29 @@ class RecentlyVisited extends Component {
                 this.setState({ bookInfo: response.data })
                 console.log(response.data.id)
                 window.location.href = `/details?id=${id}`;
+                // BookDetails.displayDetails(response.data) ?ProductId=" + productId;
+
             }
         )
-
-
-
-
     }
-    getData(val) {
-        this.setState({ data: val.target.value })
-        this.setState({ print: false })
-        this.setState({ welcomeMessage: '' })
-        console.log(val.target.value)
-
-    }
-
     render() {
         return (
             <>
-                <h2>Recently Visited</h2>
-                <div className="search-history">
-                    <NavLink
-                        to="/books"
-                        style={{fontFamily: "fantasy", fontSize: 12, color: "green"}}
-                    >
-                        Back
-                    </NavLink>
-                </div>
-                {/* <button style={{ color: "Green",  fontSize: 15, backgroundColor: "Yellow" }} className="search-history">back</button> */}
+            <div>
+                        <div><button style={{ color: "black", fontWeight: "bolder", fontSize: 13, width: "100px", backgroundColor: "green" }}  onClick={e => window.location.href = `/books`}>Back</button></div>
+                    </div>
                 <div className="books-table">
+                
 
                     <table className="table">
+                   
                         <thead>
                             <tr>
                                 <th>name</th>
                                 <th>description</th>
                             </tr>
-
+                            
                         </thead>
-
                         <tbody>
                             {
                                 this.state.books.map(
@@ -101,19 +67,18 @@ class RecentlyVisited extends Component {
                                         <tr>
                                             <td onClick={() => this.retriveBookDetails(book.id)}>{book.name}</td>
                                             <td>{book.description}</td>
+
                                         </tr>
                                 )
                             }
                         </tbody>
-
+                        
                     </table>
-
+                    
                 </div>
-                <button>back</button>
+
             </>
         )
     }
 }
-
-
-export default RecentlyVisited
+export default CartComponent;

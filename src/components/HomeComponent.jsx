@@ -6,6 +6,7 @@ import WelcomeComponent from "./WelcomeComponent";
 import SearchResult from "./SearchResult";
 import DisplayBookDetails from "./DisplayBookDetails";
 import RecentlyVisited from "./RecentyVisited";
+import CartComponent from "./CartComponent";
 class HomeComponent extends Component{
   
     render() {
@@ -19,6 +20,7 @@ class HomeComponent extends Component{
                         <Route path="/books" element={<SearchResult />} />
                         <Route path="/details" element={<DisplayBookDetails />} />
                         <Route path="/recent" element={<RecentlyVisited />} />
+                        <Route path="/cart" element={<CartComponent />} />
                     </Routes>
                 </Router>
             </div>

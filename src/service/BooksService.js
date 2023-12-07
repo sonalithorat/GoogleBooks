@@ -18,6 +18,9 @@ class BooksService{
        
         return axios.get('http://localhost:8080/api/getAllBooks');
     }
+    retriveCartBooks(){
+        return axios.get('http://localhost:8080/api/getBook/cart');
+    }
     retriveViewedBooks(){
         return axios.get('http://localhost:8080/api/getBook/recentlyVisited');
     }
@@ -35,6 +38,13 @@ class BooksService{
        
         book.stock = book.stock+stock;
         console.log("stock=",book.stock);
+        //console.log('executed service')
+        return axios.put('http://localhost:8080/api/update',book);
+    }
+
+    updateBook_addToCart(isAdded, book) {
+        console.log("is added to cart=",isAdded);
+        book.addedToCart= isAdded;
         //console.log('executed service')
         return axios.put('http://localhost:8080/api/update',book);
     }

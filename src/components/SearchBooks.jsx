@@ -29,7 +29,7 @@ class SearchBooks extends Component {
                 </div>
                 <div>
                     {this.state.print && this.state.welcomeMessage}
-                    {/* {this.state.welcomeMessage} */}
+                    
                   
                 </div>
                 <div><href>Recently Visited</href></div>
@@ -45,6 +45,9 @@ class SearchBooks extends Component {
     }
 
     handleSuccessResponse(response){
+        if(response.data.length===0){
+            alert("Result not found")
+        }
         this.setState({print: true})
         this.setState({welcomeMessage: response.data})
         
